@@ -9,8 +9,8 @@ from util import get_exchange_days, get_data, normalize_data
 
 
 def get_momentum(price, window=5):
-    """
-    Calculates momentum indicator: momentum[t] = (price[t]/price[t-window]) - 1
+    """Calculate momentum indicator: 
+    momentum[t] = (price[t]/price[t-window]) - 1
 
     Parameters:
     price: Price, typically adjusted close price, series of a symbol
@@ -22,10 +22,8 @@ def get_momentum(price, window=5):
     momentum.iloc[window:] = price.iloc[window:] / price.values[:-window] - 1
     return momentum
 
-
 def get_sma_indicator(price, rolling_mean):
-    """
-    Calculates simple moving average indicator, i.e. price / rolling_mean
+    """Calculate simple moving average indicator, i.e. price / rolling_mean.
 
     Parameters:
     price: Price, typically adjusted close price, series of a symbol
@@ -35,10 +33,8 @@ def get_sma_indicator(price, rolling_mean):
     """
     return price / rolling_mean - 1
 
-
 def get_bollinger_bands(rolling_mean, rolling_std, num_std=2):
-    """
-    Calculate upper and lower Bollinger Bands
+    """Calculate upper and lower Bollinger Bands.
 
     Parameters:
     rolling_mean: Rolling mean of a series
@@ -51,10 +47,9 @@ def get_bollinger_bands(rolling_mean, rolling_std, num_std=2):
     lower_band = rolling_mean - rolling_std * num_std
     return upper_band, lower_band
 
-
 def compute_bollinger_value(price, rolling_mean, rolling_std):
-    """
-    Output a value indicating how many standard deviations a price is from the mean
+    """Output a value indicating how many standard deviations 
+    a price is from the mean.
 
     Parameters:
     price: Price, typically adjusted close price, series of a symbol
@@ -68,10 +63,9 @@ def compute_bollinger_value(price, rolling_mean, rolling_std):
     bollinger_val = (price - rolling_mean) / rolling_std
     return bollinger_val
 
-
-def plot_momentum(sym_price, sym_mom, title="Momentum Indicator", fig_size=(12, 6)):
-    """
-    Plot momentum and prices for a symbol
+def plot_momentum(sym_price, sym_mom, title="Momentum Indicator",
+                  fig_size=(12, 6)):
+    """Plot momentum and prices for a symbol.
 
     Parameters:
     sym_price: Price, typically adjusted close price, series of symbol
@@ -81,13 +75,13 @@ def plot_momentum(sym_price, sym_mom, title="Momentum Indicator", fig_size=(12, 
     Returns:
     Plot momentum and prices on the sample plot with two scales
     """
-
     # Create two subplots on the same axes with different left and right scales
     fig, ax1 = plt.subplots()
 
     # The first subplot with the left scale: prices
     ax1.grid(linestyle='--')
-    line1 = ax1.plot(sym_price.index, sym_price, label="Adjusted Close Price", color="b")
+    line1 = ax1.plot(sym_price.index, sym_price, label="Adjusted Close Price",
+                     color="b")
     ax1.set_xlabel("Date")
     # Make the y-axis label, ticks and tick labels match the line color
     ax1.set_ylabel("Adjusted Close Price", color="b")
@@ -95,7 +89,8 @@ def plot_momentum(sym_price, sym_mom, title="Momentum Indicator", fig_size=(12, 
 
     # The second subplot with the right scale: momentum
     ax2 = ax1.twinx()
-    line2 = ax2.plot(sym_mom.index, sym_mom, label="Momentum", color="k", alpha=0.4)
+    line2 = ax2.plot(sym_mom.index, sym_mom, label="Momentum", color="k",
+                     alpha=0.4)
     ax2.set_ylabel("Momentum", color="k")
     ax2.tick_params("y", colors="k")
 
@@ -114,11 +109,9 @@ def plot_momentum(sym_price, sym_mom, title="Momentum Indicator", fig_size=(12, 
     plt.suptitle(title)
     plt.show()
 
-
 def plot_sma_indicator(sym_price, sma_indicator, rolling_mean, 
-    title="SMA Indicator", fig_size=(12, 6)):
-    """
-    Plot simple moving average indicator, price and rolling_mean for a symbol
+                       title="SMA Indicator", fig_size=(12, 6)):
+    """Plot SMA indicator, price and rolling_mean for a symbol.
 
     Parameters:
     sym_price: Price, typically adjusted close price, series of symbol
@@ -130,13 +123,13 @@ def plot_sma_indicator(sym_price, sma_indicator, rolling_mean,
     Returns:
     Plot all the three series on the same plot with two scales
     """
-
     # Create two subplots on the same axes with different left and right scales
     fig, ax1 = plt.subplots()
 
     # The first subplot with the left scale: prices
     ax1.grid(linestyle='--')
-    line1 = ax1.plot(sym_price.index, sym_price, label="Adjusted Close Price", color="b")
+    line1 = ax1.plot(sym_price.index, sym_price, label="Adjusted Close Price",
+                     color="b")
     line2 = ax1.plot(rolling_mean.index, rolling_mean, label="SMA", color="g")
     ax1.set_xlabel("Date")
     # Make the y-axis label, ticks and tick labels match the line color
@@ -165,11 +158,9 @@ def plot_sma_indicator(sym_price, sma_indicator, rolling_mean,
     plt.title(title)
     plt.show()
 
-
 def plot_bollinger(sym_price, upper_band, lower_band, bollinger_val, 
-    num_std=1, title="Bollinger Indicator", fig_size=(12, 6)):
-    """
-    Plot Bollinger bands and value for a symbol
+                   num_std=1, title="Bollinger Indicator", fig_size=(12, 6)):
+    """Plot Bollinger bands and value for a symbol.
 
     Parameters:
     sym_price: Price, typically adjusted close price, series of symbol
@@ -180,20 +171,20 @@ def plot_bollinger(sym_price, upper_band, lower_band, bollinger_val,
     fig_size: Width and height of the chart in inches
 
     Returns:
-    Plot two subplots, one for the Adjusted Close Price and Bollinger bands, the other 
-    for the Bollinger value
+    Plot two subplots, one for the Adjusted Close Price and Bollinger bands,
+    the other for the Bollinger value
     """
-    
     # Create 2 subplots
-    # First subplot: symbol"s adjusted close price, rolling mean and Bollinger Bands
+    # Plot symbol's adjusted close price, rolling mean and Bollinger Bands
     f, ax = plt.subplots(2, sharex=True)
-    ax[0].fill_between(upper_band.index, upper_band, lower_band, color="gray", alpha=0.4, 
-        linewidth=2.0, label="Region btwn Bollinger Bands")
+    ax[0].fill_between(upper_band.index, upper_band, lower_band, color="gray",
+                       alpha=0.4, linewidth=2.0,
+                       label="Region btwn Bollinger Bands")
     ax[0].plot(sym_price, label="Adjusted Close Price", color="b")
     ax[0].set_ylabel("Adjusted Close Price")
     ax[0].legend(loc="upper center")
 
-    # Second subplot: the bollinger value
+    # Plot the bollinger value
     ax[1].axhspan(-num_std, num_std, color="gray", alpha=0.4, linewidth=2.0,
         label="Region btwn {} & {} std".format(-num_std, num_std))
     ax[1].plot(bollinger_val, label="Bollinger Value", color="b")
@@ -209,9 +200,8 @@ def plot_bollinger(sym_price, upper_band, lower_band, bollinger_val,
     plt.suptitle(title)
     plt.show()
 
-
 def align_y_axis(ax1, ax2, minresax1, minresax2):
-    """Sets tick marks of twinx axes to line up with 7 total tick marks
+    """Set tick marks of twinx axes to line up with 7 total tick marks.
 
     ax1 and ax2 are matplotlib axes
     Spacing between tick marks will be a factor of minresax1 and minresax2
@@ -238,8 +228,9 @@ if __name__ == "__main__":
     end_date = dt.datetime(2009, 12, 31)
 
     # Get NYSE trading dates
-    dates = get_exchange_days(start_date, end_date, dirpath="../data/dates_lists", 
-        filename="NYSE_dates.txt")
+    dates = get_exchange_days(start_date, end_date, 
+                              dirpath="../data/dates_lists", 
+                              filename="NYSE_dates.txt")
 
     symbols = ["AAPL"]
     # Get stock data and normalize it
@@ -260,23 +251,26 @@ if __name__ == "__main__":
 
         # Plot momentum
         plot_momentum(norm_price[symbol], momentum, 
-            "Momentum Indicator for {} with lookback={} days \
-            \n(Prices are normalized to the first date)".format(symbol, window))
+            "Momentum Indicator for {} with lookback={} days \n \
+            Prices are normalized to the first date)".format(symbol, window))
 
         # Get SMA indicator
         sma_indicator = get_sma_indicator(norm_price[symbol], rolling_mean)
 
         # Plot SMA indicator
         plot_sma_indicator(norm_price[symbol], sma_indicator, rolling_mean, 
-            "SMA Indicator for {} with lookback={} days \
-            \n(Prices are normalized to the first date)".format(symbol, window))
+            "SMA Indicator for {} with lookback={} days \n \
+            (Prices are normalized to the first date)".format(symbol, window))
 
         # Compute Bollinger bands and value
-        upper_band, lower_band = get_bollinger_bands(rolling_mean, rolling_std, num_std)
-        bollinger_val = compute_bollinger_value(norm_price[symbol], rolling_mean, rolling_std)
+        upper_band, lower_band = get_bollinger_bands(rolling_mean, rolling_std,
+                                                     num_std)
+        bollinger_val = compute_bollinger_value(norm_price[symbol], 
+                                                rolling_mean, rolling_std)
 
         # Plot Bollinger bands and values
-        plot_bollinger(norm_price[symbol], upper_band, lower_band, bollinger_val, num_std, 
+        plot_bollinger(norm_price[symbol], upper_band, lower_band, 
+            bollinger_val, num_std, 
             "Bollinger Indicator for {} with num_std={}, lookback={} days \
             \n(Prices are normalized to the first date)".
             format(symbol, num_std, window))
